@@ -1,55 +1,56 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import {Row, Col, Spin } from 'antd';
+import { Row, Col, Spin, Alert } from 'antd';
+import { getMovies } from './apiService';
 import MovieCard from './MovieCard';
-
-const API_KEY = 'a3f1f58a6268353d9049816704dd90d4';  
-const API_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=return`;
+import { Offline, Online } from 'react-detect-offline';
 
 class MovieList extends Component {
   state = {
     movies: [],
     loading: true,
+    error: null,
   };
 
-  _isMounted = false;
-
   async componentDidMount() {
-    this._isMounted = true;
-    try {
-      const res = await axios.get(API_URL);
-      if (this._isMounted) this.setState({ movies: res.data.results, loading: false });
-      
-    } catch (error) {
-      console.error('Error fetching data: ', error);
-      if (this._isMounted) this.setState({ loading: false });;
-    }
+    const { movies, error } = await getMovies();
+    this.setState({ movies, error, loading: false });
   }
-  
 
   render() {
-    const { movies, loading } = this.state;
+    const { movies, loading, error } = this.state;
+
     if (loading) {
       return (
-        <div className="loading">
-          <Spin size="large" />
+        <div className="loading" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Spin className="ant-spin-lg" />
         </div>
       );
     }
+
+    if (error) {
+      return (
+        <div className="error" style={{ padding: '20px', textAlign: 'center' }}>
+          <Alert message={error} type="error" showIcon />
+        </div>
+      );
+    }
+
     return (
-      <Row style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)', 
-        gap: '12px', 
-        justifyContent: 'center', 
-        margin: '0 auto', 
-        maxWidth: '1200px' 
-      }}>
-        {movies.map((movie) => (
-        <Col  xs={24} sm={24} md={12} lg={12} xl={12}>
-          <MovieCard key={movie.id} movie={movie}/>
-        </Col>))}
-      </Row>
+      <div>
+        <Offline>
+          <Alert message="No internet connection. Please check your network." type="error" showIcon />
+        </Offline>
+
+        <Online>
+          <Row gutter={[16, 16]} justify="center">
+            {movies.map((movie) => (
+              <Col xs={24} sm={24} md={12} lg={12} xl={12} key={movie.id}>
+                <MovieCard movie={movie} />
+              </Col>
+            ))}
+          </Row>
+        </Online>
+      </div>
     );
   }
 }
