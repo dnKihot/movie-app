@@ -14,8 +14,8 @@ export default [
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'warn', 
-      'react/default-props-match-prop-types': 'warn', 
+      'react/prop-types': 'warn',
+      'react/default-props-match-prop-types': 'warn',
     },
     settings: {
       react: {

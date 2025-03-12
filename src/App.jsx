@@ -4,8 +4,8 @@ import MovieList from './components/MovieList';
 export default class App extends React.Component {
   render() {
     return (
-      <div className='App'>
-        <MovieList/>
+      <div className="App">
+        <MovieList />
       </div>
     );
   }
