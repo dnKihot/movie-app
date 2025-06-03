@@ -53,6 +53,6 @@ yarn format       # Run Prettier
 
 ## 🌐 Live Demo
 
-> You can test the app here: **[https://movie-app-six-flame-89.vercel.app/]**
+> You can test the app here: **[https://movie-app-git-master-xxxters-projects.vercel.app/]**
 
 ---
